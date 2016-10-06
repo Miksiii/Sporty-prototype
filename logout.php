@@ -1,0 +1,3 @@
+<?php 
+
+// skripta za logout
