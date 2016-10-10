@@ -141,5 +141,70 @@ class User
       $this->facebookUrl = $currentUser['user_facebookUrl'];
     }
   }
+
+  public function editProfile($username, $email, $password, $phone, $facebookUrl)
+  {
+    $sql = "
+      UPDATE users 
+      SET 
+      user_name = :username, 
+      user_email = :email, 
+      user_password = :password, 
+      user_phone = :phone, 
+      user_facebookUrl = :facebookUrl 
+      WHERE 
+      user_id = :id
+    ";
+
+    $query = $this->db->prepare($sql);
+
+    $query->bindParam(':username', $username);
+    $query->bindParam(':email', $email);
+    $query->bindParam(':password', $password);
+    $query->bindParam(':phone', $phone);
+    $query->bindParam(':facebookUrl', $facebookUrl);
+    $query->bindParam(':id', $this->id);
+
+    $query->execute();
+    $this->setUserDetails($this->id);
+
+    echo "<div class='alert alert-success'>Successfuly udated.</div>";
+  }
+
+  public function getSportsList() 
+  {
+    $sql = "
+      SELECT * FROM sports
+    ";
+
+    $query = $this->db->prepare($sql);
+    $query->execute();
+
+    return $query->fetchall();
+  }
+
+  public function eventCreate($sportName, $title, $date, $time, $players)
+  {
+    $sql = "
+      INSERT INTO 
+      events 
+      (event_id, user_id, sport_name, event_title, event_date, event_time, event_players, event_going)
+      VALUES 
+      (NULL, :user_id, :sport_name, :event_title, :event_date, :event_time, :event_players, 0)
+    ";
+
+    $query = $this->db->prepare($sql);
+
+    $query->bindParam(':user_id', $this->id);
+    $query->bindParam(':sport_name', $sportName);
+    $query->bindParam(':event_title', $title);
+    $query->bindParam(':event_date', $date);
+    $query->bindParam(':event_time', $time);
+    $query->bindParam(':event_players', $players);
+
+    $query->execute();
+
+    echo "<div class='alert alert-success'>Successufuly created event</div>";
+  }
 }
 
