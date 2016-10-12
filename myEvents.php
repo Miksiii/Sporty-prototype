@@ -2,8 +2,7 @@
 
 include 'initialize.php';
 
-$filter = $_GET['filter'];
-$eventsList = $currentUser->getEventsList($filter);
+$myEventsList = $currentUser->getMyEvents($currentUser->getId());
 
 ?>
 
@@ -20,7 +19,7 @@ $eventsList = $currentUser->getEventsList($filter);
     <div class="row">
       <div class="col-md-12">
         <div class="jumbotron">
-          <h1>Let's play some <?php echo $filter; ?>, <?php echo $currentUser->getUsername(); ?>!</h1>
+          <h1>These are your events, <?php echo $currentUser->getUsername(); ?>!</h1>
           <hr>
           <p>
             <a href="eventCreate.php">Create</a> |
@@ -34,18 +33,15 @@ $eventsList = $currentUser->getEventsList($filter);
 
         <?php 
 
-        foreach($eventsList as $event)
+        foreach($myEventsList as $myEvent)
         {
           ?> 
 
-            <div class="alert alert-danger">
-              <h2><?php echo $event['event_title']; ?> (<?php echo $event['user_name']; ?>)</h2>
-              <p>Date & time: <?php echo $event['event_date']; ?> @ <?php echo $event['event_time']; ?>h</p>
-              <p>Players: <?php echo $event['event_going']; ?>/<?php echo $event['event_players']; ?></p>
-
-              <br>
-              <a href="eventJoin.php?filter=<?php echo $filter; ?>&eventID=<?php echo $event['event_id']?>" class="btn btn-danger">JOIN</a>
-              <a href="eventLeave.php?filter=<?php echo $filter; ?>&eventID=<?php echo $event['event_id']?>" class="btn btn-danger">LEAVE</a>
+            <div class="alert alert-success">
+              <h2><?php echo $myEvent['event_title']; ?></h2>
+              <p>Date & time: <?php echo $myEvent['event_date']; ?> @ <?php echo $myEvent['event_time']; ?>h</p>
+              <p>Players: <?php echo $myEvent['event_going']; ?>/<?php echo $myEvent['event_players']; ?></p>
+              <a href="#" class="btn btn-default">Delete Event</a>
             </div>
             
           <?php

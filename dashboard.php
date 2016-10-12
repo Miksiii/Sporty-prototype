@@ -1,16 +1,6 @@
 <?php 
 
-require 'core/User.php';
-
-session_start();
-
-if(!isset($_SESSION['user_id'])) 
-{
-  header('Location: http://localhost/www/sporty/index.php');
-}
-
-$currentUser = new User();
-$currentUser->setUserDetails($_SESSION['user_id']);
+include 'initialize.php';
 
 $sportsList = $currentUser->getSportsList();
 
@@ -36,6 +26,7 @@ $sportsList = $currentUser->getSportsList();
           <p>Facebook: <?php echo $currentUser->getFacebookUrl();?></p>
           <hr>
           <p>
+            <a href="myEvents.php">My events</a> |
             <a href="eventCreate.php">Create</a> |
             <a href="editProfile.php">Edit</a> | 
             <a href="logout.php">Logout</a>
@@ -52,7 +43,7 @@ $sportsList = $currentUser->getSportsList();
             <p><?php echo $category['sport_description']; ?></p>
             <p><b>Events: <?php echo $category['sport_events'];?></b></p>
             <hr>
-            <a href="events.php" class="btn btn-info">See all events ></a>
+            <a href="events.php?filter=<?php echo $category['sport_name']; ?>" class="btn btn-info">See all events ></a>
           </div>
           <?php 
         }

@@ -203,8 +203,78 @@ class User
     $query->bindParam(':event_players', $players);
 
     $query->execute();
+    $this->updateNumberOfEvents($sportName);
 
     echo "<div class='alert alert-success'>Successufuly created event</div>";
   }
+
+  public function updateNumberOfEvents($sport)
+  {
+    $sql = "
+      UPDATE sports 
+      SET sport_events = sport_events + 1
+      WHERE sport_name = :sport
+    ";
+
+    $query = $this->db->prepare($sql);
+    $query->bindParam(':sport', $sport);
+    $query->execute();
+  }
+
+  public function getEventsList($filter)
+  {
+    $sql = "
+      SELECT * FROM events 
+      JOIN users 
+      ON users.user_id = events.user_id 
+      WHERE events.sport_name = :filter
+    ";
+
+    $query = $this->db->prepare($sql);
+    $query->bindParam(':filter', $filter);
+    $query->execute();
+
+    return $query->fetchall();
+  }
+
+  public function getMyEvents($id)
+  {
+    $sql = "
+      SELECT * FROM events 
+      WHERE user_id = :id
+    ";
+
+    $query = $this->db->prepare($sql);
+    $query->bindParam(':id', $id);
+    $query->execute();
+
+    return $query->fetchall();
+  }
+
+  public function eventGo($eventID)
+  {
+    $sql = "
+      UPDATE events 
+      SET event_going = event_going + 1 
+      WHERE event_id = :eventID
+    ";
+
+    $query = $this->db->prepare($sql);
+    $query->bindParam(':eventID', $eventID);
+    $query->execute();
+  }
+
+  public function eventLeave($eventID)
+  {
+    $sql = "
+      UPDATE events 
+      SET event_going = event_going - 1 
+      WHERE event_id = :eventID
+    ";
+
+    $query = $this->db->prepare($sql);
+    $query->bindParam(':eventID', $eventID);
+    $query->execute();
+  }  
 }
 
